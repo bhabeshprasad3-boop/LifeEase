@@ -21,7 +21,7 @@ app.use(helmet());
 // CORS — allow only the client origin
 app.use(
   cors({
-    origin: env.clientUrl,
+    origin: ['http://localhost:5173', 'https://life-ease-six.vercel.app'],
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
