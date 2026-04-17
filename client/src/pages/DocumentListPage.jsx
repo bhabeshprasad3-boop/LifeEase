@@ -70,7 +70,7 @@ export default function DocumentListPage() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `${doc.title.replace(/[^a-zA-Z0-9_\-]/g, '_')}.${doc.fileType || 'bin'}`;
+      a.download = `${doc.title.replace(/[^a-zA-Z0-9_\-.]/g, '_')}.${doc.fileType || 'bin'}`;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
