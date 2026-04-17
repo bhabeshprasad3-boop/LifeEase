@@ -1,0 +1,358 @@
+.page {
+  min-height: 100vh;
+  background: var(--surface);
+}
+
+/* ── Navbar ── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 var(--space-10);
+  height: 64px;
+}
+
+.navBrand { display: flex; align-items: center; gap: var(--space-2); }
+
+.brandDot {
+  width: 10px; height: 10px;
+  background: linear-gradient(135deg, var(--primary), var(--surface-tint));
+  border-radius: 50%;
+}
+
+.brandText {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--on-surface);
+}
+
+.navLinks { display: flex; gap: var(--space-8); }
+
+.navLinks a {
+  font-size: 0.875rem;
+  color: var(--on-surface-variant);
+  transition: color var(--transition-fast);
+  font-weight: 500;
+}
+.navLinks a:hover { color: var(--on-surface); }
+
+.navActions { display: flex; align-items: center; gap: var(--space-4); }
+
+.loginLink {
+  font-size: 0.875rem;
+  color: var(--on-surface-variant);
+  font-weight: 500;
+  transition: color var(--transition-fast);
+}
+.loginLink:hover { color: var(--on-surface); }
+
+.ctaBtn {
+  background: var(--primary);
+  color: var(--on-primary);
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: opacity var(--transition-fast), transform var(--transition-fast);
+}
+.ctaBtn:hover { opacity: 0.85; transform: translateY(-1px); }
+
+/* ── Hero ── */
+.hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-16);
+  align-items: center;
+  max-width: var(--container-max);
+  margin: 0 auto;
+  padding: var(--space-20) var(--space-10);
+}
+
+.heroContent { display: flex; flex-direction: column; gap: var(--space-6); }
+
+.heroPill {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  background: var(--secondary-container);
+  color: var(--on-secondary-container);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-full);
+  font-size: 0.75rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.pillDot {
+  width: 6px; height: 6px;
+  background: var(--surface-tint);
+  border-radius: 50%;
+}
+
+.heroTitle {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.75rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--on-surface);
+}
+
+.heroAccent {
+  background: linear-gradient(135deg, var(--surface-tint), #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroDesc {
+  font-size: 1rem;
+  color: var(--on-surface-variant);
+  line-height: 1.7;
+  max-width: 480px;
+}
+
+.heroCtas { display: flex; gap: var(--space-4); align-items: center; }
+
+.primaryCta {
+  background: var(--primary);
+  color: var(--on-primary);
+  padding: var(--space-4) var(--space-8);
+  border-radius: var(--radius-md);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  transition: all var(--transition-fast);
+}
+.primaryCta:hover { opacity: 0.85; transform: translateY(-2px); box-shadow: var(--shadow-float); }
+
+.secondaryCta {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--on-surface-variant);
+  transition: color var(--transition-fast);
+}
+.secondaryCta:hover { color: var(--on-surface); }
+
+/* ── Vault Preview ── */
+.vaultPreview {
+  background: var(--surface-container-lowest);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-ambient);
+  padding: var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.vaultHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-2);
+}
+
+.vaultLabel {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  font-family: var(--font-display);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+
+.vaultStatusDot {
+  width: 8px; height: 8px;
+  background: var(--tertiary-fixed-dim);
+  border-radius: 50%;
+}
+
+.vaultCount {
+  font-size: 0.75rem;
+  color: var(--on-surface-variant);
+}
+
+.vaultItem {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4);
+  background: var(--surface-container-low);
+  border-radius: var(--radius-md);
+  transition: background var(--transition-fast);
+}
+.vaultItem:hover { background: var(--surface-container); }
+
+.vaultItemIcon {
+  width: 38px; height: 38px;
+  background: var(--surface-container);
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.vaultItemInfo { flex: 1; min-width: 0; }
+
+.vaultItemName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--on-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.vaultItemMeta {
+  font-size: 0.75rem;
+  color: var(--on-surface-variant);
+}
+
+/* ── Features ── */
+.features {
+  background: var(--surface-container-low);
+  padding: var(--space-20) var(--space-10);
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: var(--space-12);
+}
+
+.sectionEyebrow {
+  color: var(--surface-tint);
+  margin-bottom: var(--space-3);
+}
+
+.sectionTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+  font-weight: 600;
+  color: var(--on-surface);
+  max-width: 560px;
+  margin: 0 auto var(--space-4);
+}
+
+.sectionDesc {
+  color: var(--on-surface-variant);
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.7;
+}
+
+.featureGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: var(--space-6);
+  max-width: var(--container-max);
+  margin: 0 auto;
+}
+
+.featureCard {
+  background: var(--surface-container-lowest);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-card);
+  transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+.featureCard:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-float);
+}
+
+.featureIcon { font-size: 1.75rem; margin-bottom: var(--space-4); }
+
+.featureTitle {
+  font-family: var(--font-display);
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--on-surface);
+  margin-bottom: var(--space-2);
+}
+
+.featureDesc {
+  font-size: 0.875rem;
+  color: var(--on-surface-variant);
+  line-height: 1.6;
+}
+
+/* ── Categories ── */
+.categories {
+  padding: var(--space-20) var(--space-10);
+  max-width: var(--container-max);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.categoryGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-top: var(--space-8);
+}
+
+.categoryChip {
+  background: var(--surface-container);
+  color: var(--on-surface);
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: default;
+  transition: background var(--transition-fast), transform var(--transition-fast);
+}
+.categoryChip:hover {
+  background: var(--surface-container-high);
+  transform: translateY(-2px);
+}
+
+/* ── CTA Banner ── */
+.ctaBanner {
+  background: linear-gradient(135deg, var(--primary), var(--primary-container));
+  padding: var(--space-20) var(--space-10);
+  text-align: center;
+}
+
+.ctaBannerTitle {
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  font-weight: 600;
+  color: var(--on-primary);
+  margin-bottom: var(--space-4);
+}
+
+.ctaBannerDesc {
+  color: rgba(255,255,255,0.75);
+  font-size: 1rem;
+  margin-bottom: var(--space-8);
+}
+
+.ctaBanner .primaryCta {
+  background: var(--on-primary);
+  color: var(--primary);
+}
+
+/* ── Footer ── */
+.footer {
+  padding: var(--space-8) var(--space-10);
+  text-align: center;
+  color: var(--on-surface-variant);
+  font-size: 0.8125rem;
+  border-top: 1px solid rgba(198, 198, 205, 0.12);
+}
+
+/* ── Responsive ── */
+@media (max-width: 900px) {
+  .hero { grid-template-columns: 1fr; gap: var(--space-10); padding: var(--space-10) var(--space-6); }
+  .vaultPreview { display: none; }
+  .nav { padding: 0 var(--space-6); }
+  .navLinks { display: none; }
+  .features, .categories, .ctaBanner { padding: var(--space-12) var(--space-6); }
+}

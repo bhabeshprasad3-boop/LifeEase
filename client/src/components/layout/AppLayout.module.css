@@ -1,0 +1,29 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+  background: var(--surface-container-low);
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin-left: var(--sidebar-width);
+}
+
+.content {
+  flex: 1;
+  padding: var(--space-8);
+  animation: fadeInUp 0.35s var(--ease-weighted) both;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 768px) {
+  .main { margin-left: 0; }
+  .content { padding: var(--space-4); }
+}

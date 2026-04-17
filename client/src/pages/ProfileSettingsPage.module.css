@@ -1,0 +1,175 @@
+.page { display: flex; flex-direction: column; gap: var(--space-6); max-width: 680px; }
+
+.header { margin-bottom: var(--space-2); }
+
+.title {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: var(--on-surface);
+}
+.subtitle { color: var(--on-surface-variant); margin-top: var(--space-1); }
+
+/* Avatar Block */
+.avatarBlock {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+  background: var(--surface-container-lowest);
+  border-radius: var(--radius-lg);
+  padding: var(--space-5) var(--space-6);
+  box-shadow: var(--shadow-card);
+}
+
+.avatarCircle {
+  width: 56px; height: 56px;
+  background: linear-gradient(135deg, var(--primary), var(--primary-container));
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--on-primary);
+  flex-shrink: 0;
+}
+
+.avatarName { font-size: 1rem; font-weight: 600; color: var(--on-surface); }
+.avatarEmail { font-size: 0.8125rem; color: var(--on-surface-variant); }
+
+/* Messages */
+.success {
+  background: var(--status-active-bg);
+  color: #005236;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.error {
+  background: var(--error-container);
+  color: var(--on-error-container);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: var(--space-1);
+  background: var(--surface-container);
+  border-radius: var(--radius-lg);
+  padding: var(--space-1);
+}
+
+.tab {
+  flex: 1;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--on-surface-variant);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  border: none;
+  background: transparent;
+  text-align: center;
+}
+.tab:hover { color: var(--on-surface); }
+.activeTab {
+  background: var(--surface-container-lowest);
+  color: var(--on-surface);
+  font-weight: 600;
+  box-shadow: var(--shadow-card);
+}
+
+/* Card */
+.card {
+  background: var(--surface-container-lowest);
+  border-radius: var(--radius-lg);
+  padding: var(--space-8);
+  box-shadow: var(--shadow-card);
+}
+
+.cardTitle {
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--on-surface);
+  margin-bottom: var(--space-6);
+}
+
+.form { display: flex; flex-direction: column; gap: var(--space-4); }
+
+.formActions {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: var(--space-4);
+  border-top: 1px solid rgba(198,198,205,0.1);
+  margin-top: var(--space-2);
+}
+
+/* Preferences */
+.prefsList { display: flex; flex-direction: column; gap: var(--space-5); }
+
+.prefRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  padding: var(--space-4) 0;
+  border-bottom: 1px solid rgba(198,198,205,0.1);
+  cursor: pointer;
+}
+
+.prefLabel { font-size: 0.9375rem; font-weight: 600; color: var(--on-surface); }
+.prefDesc { font-size: 0.8125rem; color: var(--on-surface-variant); margin-top: 2px; }
+
+/* Toggle */
+.toggle {
+  width: 44px; height: 24px;
+  border-radius: var(--radius-full);
+  background: var(--surface-container-high);
+  position: relative;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  flex-shrink: 0;
+}
+.toggleOn { background: var(--tertiary-fixed-dim); }
+
+.toggleKnob {
+  position: absolute;
+  top: 3px; left: 3px;
+  width: 18px; height: 18px;
+  background: white;
+  border-radius: 50%;
+  transition: transform var(--transition-fast);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+}
+.toggleOn .toggleKnob { transform: translateX(20px); }
+
+/* Day chips */
+.daysSection { display: flex; flex-direction: column; gap: var(--space-3); }
+.dayChips { display: flex; gap: var(--space-2); }
+
+.dayChip {
+  padding: var(--space-2) var(--space-4);
+  background: var(--surface-container);
+  border-radius: var(--radius-full);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--on-surface-variant);
+  cursor: pointer;
+  border: none;
+  transition: all var(--transition-fast);
+}
+.dayChip:hover { background: var(--surface-container-high); }
+.dayChipActive { background: var(--primary); color: var(--on-primary); }
+
+@media (max-width: 640px) {
+  .tabs { flex-direction: column; }
+  .card { padding: var(--space-5); }
+}
