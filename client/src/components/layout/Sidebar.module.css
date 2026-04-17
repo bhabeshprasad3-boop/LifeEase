@@ -175,5 +175,35 @@
 }
 
 @media (max-width: 768px) {
-  .sidebar { transform: translateX(-100%); }
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform var(--transition-base);
+    width: 280px;
+    z-index: 201;
+  }
+  .sidebar.mobileOpen {
+    transform: translateX(0);
+    box-shadow: var(--shadow-xl);
+  }
+  .closeBtn {
+    display: flex;
+    position: absolute;
+    top: var(--space-4);
+    right: var(--space-4);
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    background: var(--surface-container);
+    color: var(--text-secondary);
+    align-items: center;
+    justify-content: center;
+  }
+  .closeBtn:hover {
+    background: var(--surface-muted);
+    color: var(--text-primary);
+  }
+}
+
+@media (min-width: 769px) {
+  .closeBtn { display: none; }
 }

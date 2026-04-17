@@ -65,6 +65,7 @@ export default function LoginPage() {
               <div key={f} className={styles.brandFeature}>
                 <span className={styles.featureCheck}>
                   <Icon name="check" size={10} />
+                  
                 </span>
                 {f}
               </div>

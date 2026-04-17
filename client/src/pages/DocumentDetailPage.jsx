@@ -12,6 +12,7 @@ export default function DocumentDetailPage() {
   const [doc, setDoc] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [downloading, setDownloading] = useState(false);
 
   const refresh = () => documentService.getById(id).then(r => setDoc(r.data.document));
 
@@ -29,6 +30,25 @@ export default function DocumentDetailPage() {
     if (doc.archived) await documentService.unarchive(id);
     else await documentService.archive(id);
     refresh();
+  };
+
+  const handleDownload = async () => {
+    try {
+      setDownloading(true);
+      const blob = await documentService.download(id);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${doc.title.replace(/[^a-zA-Z0-9_\-]/g, '_')}.${doc.fileType || 'bin'}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      alert('Download failed. Please try again.');
+    } finally {
+      setDownloading(false);
+    }
   };
 
   const fmt = d => d ? new Date(d).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' }) : '—';
@@ -72,6 +92,9 @@ export default function DocumentDetailPage() {
               <Icon name="externalLink" size={14} /> Open File
             </Button>
           </a>
+          <Button variant="secondary" size="sm" loading={downloading} onClick={handleDownload}>
+            <Icon name="download" size={14} /> Download
+          </Button>
           <Button variant="danger" size="sm" onClick={handleDelete}>
             <Icon name="trash" size={14} /> Delete
           </Button>

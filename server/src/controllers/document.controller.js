@@ -89,6 +89,20 @@ const deleteDocument = asyncHandler(async (req, res) => {
   ApiResponse.noContent('Document deleted successfully').send(res);
 });
 
+/**
+ * @route   GET /api/documents/:id/download
+ * @desc    Download a document file
+ * @access  Private
+ */
+const downloadDocument = asyncHandler(async (req, res) => {
+  const { url, filename } = await documentService.downloadDocument(
+    req.user._id,
+    req.params.id
+  );
+  // Redirect to Cloudinary URL so the file streams directly from there
+  res.redirect(302, url);
+});
+
 module.exports = {
   createDocument,
   getDocuments,
@@ -97,4 +111,5 @@ module.exports = {
   archiveDocument,
   unarchiveDocument,
   deleteDocument,
+  downloadDocument,
 };

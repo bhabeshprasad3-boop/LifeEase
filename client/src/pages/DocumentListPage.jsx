@@ -63,6 +63,23 @@ export default function DocumentListPage() {
     fetchDocs();
   };
 
+  const handleDownload = async (e, doc) => {
+    e.stopPropagation();
+    try {
+      const blob = await documentService.download(doc._id);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${doc.title.replace(/[^a-zA-Z0-9_\-]/g, '_')}.${doc.fileType || 'bin'}`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch {
+      alert('Download failed. Please try again.');
+    }
+  };
+
   return (
     <div className={styles.page}>
       {/* Header */}
@@ -144,6 +161,9 @@ export default function DocumentListPage() {
                   </button>
                   <button className={styles.actionBtn} onClick={e => handleArchive(e, doc)} title={doc.archived ? 'Unarchive' : 'Archive'}>
                     <Icon name={doc.archived ? 'unarchive' : 'archive'} size={14} />
+                  </button>
+                  <button className={styles.actionBtn} onClick={e => handleDownload(e, doc)} title="Download">
+                    <Icon name="download" size={14} />
                   </button>
                   <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={e => handleDelete(e, doc._id)} title="Delete">
                     <Icon name="trash" size={14} />

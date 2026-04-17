@@ -31,4 +31,10 @@ export const documentService = {
     const res = await api.delete(`/documents/${id}`);
     return res.data;
   },
+  download: async (id) => {
+    const res = await api.get(`/documents/${id}/download`, {
+      responseType: 'blob',
+    });
+    return res.data;
+  },
 };

@@ -1,5 +1,6 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useMobileMenu } from '../../context/MobileMenuContext';
 import Icon from '../common/Icon';
 import styles from './Sidebar.module.css';
 
@@ -12,6 +13,7 @@ const NAV = [
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
+  const { isOpen, close } = useMobileMenu();
   const navigate = useNavigate();
 
   const initials = user?.name
@@ -20,11 +22,12 @@ export default function Sidebar() {
 
   const handleLogout = async () => {
     await logout();
+    close();
     navigate('/login');
   };
 
   return (
-    <aside className={styles.sidebar}>
+    <aside className={`${styles.sidebar} ${isOpen ? styles.mobileOpen : ''}`}>
       {/* Brand */}
       <div className={styles.brand}>
         <div className={styles.brandMark}>
@@ -43,6 +46,7 @@ export default function Sidebar() {
           <NavLink
             key={to}
             to={to}
+            onClick={close}
             className={({ isActive }) =>
               `${styles.item} ${isActive ? styles.active : ''}`
             }

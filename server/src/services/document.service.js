@@ -230,6 +230,24 @@ const unarchiveDocument = async (userId, docId) => {
 };
 
 /**
+ * Get a download URL for a document owned by the user.
+ * Returns { url, filename } so the controller can issue a proper redirect.
+ */
+const downloadDocument = async (userId, docId) => {
+  const doc = await Document.findOne({ _id: docId, userId });
+  if (!doc) {
+    throw ApiError.notFound('Document not found');
+  }
+
+  if (!doc.fileUrl) {
+    throw ApiError.notFound('File not found. The document may be missing its stored file.');
+  }
+
+  const filename = `${doc.title.replace(/[^a-zA-Z0-9_\-]/g, '_')}.${doc.fileType || 'bin'}`;
+  return { url: doc.fileUrl, filename };
+};
+
+/**
  * Delete a document and its cloud file.
  */
 const deleteDocument = async (userId, docId) => {
@@ -256,4 +274,5 @@ module.exports = {
   archiveDocument,
   unarchiveDocument,
   deleteDocument,
+  downloadDocument,
 };

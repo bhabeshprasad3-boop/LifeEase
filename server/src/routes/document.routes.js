@@ -8,6 +8,7 @@ const {
   archiveDocument,
   unarchiveDocument,
   deleteDocument,
+  downloadDocument,
 } = require('../controllers/document.controller');
 const { protect } = require('../middleware/auth.middleware');
 const { upload } = require('../middleware/upload.middleware');
@@ -30,5 +31,6 @@ router
 
 router.patch('/:id/archive', archiveDocument);
 router.patch('/:id/unarchive', unarchiveDocument);
+router.get('/:id/download', downloadDocument);
 
 module.exports = router;
