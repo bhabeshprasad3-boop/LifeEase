@@ -10,31 +10,44 @@
   top: 0;
   z-index: 50;
   transition: background var(--transition-base), border-color var(--transition-base);
+  gap: 12px;
 }
 
-.left { display: flex; align-items: baseline; gap: 6px; }
+.left {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
 
 .greeting {
   font-size: 0.9375rem;
   font-weight: 400;
   color: var(--text-secondary);
+  white-space: nowrap;
 }
 
 .name {
   font-size: 0.9375rem;
   font-weight: 600;
   color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .right {
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  flex-shrink: 0;
 }
 
 /* Generic icon button */
 .iconBtn {
-  width: 34px; height: 34px;
+  width: 34px;
+  height: 34px;
   border-radius: var(--radius-md);
   display: flex;
   align-items: center;
@@ -62,6 +75,7 @@
   font-size: 0.8125rem;
   font-weight: 600;
   transition: opacity var(--transition-fast), transform var(--transition-fast);
+  white-space: nowrap;
 }
 
 .addBtn:hover {
@@ -69,11 +83,14 @@
   transform: translateY(-1px);
 }
 
-.addBtn:active { transform: none; }
+.addBtn:active {
+  transform: none;
+}
 
 /* Avatar */
 .avatar {
-  width: 34px; height: 34px;
+  width: 34px;
+  height: 34px;
   background: var(--accent-muted);
   color: var(--accent);
   border-radius: var(--radius-md);
@@ -84,10 +101,75 @@
   font-weight: 700;
   cursor: pointer;
   transition: background var(--transition-fast), transform var(--transition-fast);
+  flex-shrink: 0;
 }
 
 .avatar:hover {
   background: var(--accent);
   color: var(--on-accent);
   transform: scale(1.05);
+}
+
+/* Tablet */
+@media (max-width: 768px) {
+  .topbar {
+    padding: 0 16px;
+  }
+
+  .greeting,
+  .name {
+    font-size: 0.875rem;
+  }
+
+  .addBtn {
+    padding: 0 12px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 560px) {
+  .topbar {
+    padding: 0 12px;
+    gap: 8px;
+  }
+
+  .left {
+    gap: 4px;
+    min-width: 0;
+  }
+
+  .greeting {
+    font-size: 0.8125rem;
+  }
+
+  .name {
+    font-size: 0.8125rem;
+    max-width: 90px;
+  }
+
+  .right {
+    gap: 8px;
+  }
+
+  .addBtn {
+    width: 34px;
+    min-width: 34px;
+    padding: 0;
+    justify-content: center;
+  }
+
+  .addBtn span {
+    display: none;
+  }
+}
+
+/* Very small phones */
+@media (max-width: 380px) {
+  .greeting {
+    display: none;
+  }
+
+  .name {
+    max-width: 72px;
+  }
 }

@@ -14,30 +14,39 @@ export default function TopBar() {
     return 'Good evening';
   };
 
+  const firstName = user?.name?.split(' ')[0] || 'User';
+  const initials =
+    user?.name
+      ?.split(' ')
+      .map((n) => n[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase() || 'U';
+
   return (
     <header className={styles.topbar}>
       <div className={styles.left}>
         <span className={styles.greeting}>{greeting()},</span>
-        <span className={styles.name}>{user?.name?.split(' ')[0]}</span>
+        <span className={styles.name}>{firstName}</span>
       </div>
 
       <div className={styles.right}>
-        {/* Add Document */}
         <button
           className={styles.addBtn}
           onClick={() => navigate('/documents/add')}
+          aria-label="Add new document"
         >
           <Icon name="plus" size={15} />
           <span>New Document</span>
         </button>
 
-        {/* Avatar */}
         <button
           className={styles.avatar}
           onClick={() => navigate('/settings')}
           title="Profile & Settings"
+          aria-label="Profile and settings"
         >
-          {user?.name?.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+          {initials}
         </button>
       </div>
     </header>
