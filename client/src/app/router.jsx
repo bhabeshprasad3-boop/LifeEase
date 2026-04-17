@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import LandingPage from '../pages/LandingPage';
 import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
+import VerifyEmailPage from '../pages/VerifyEmailPage';
 import DashboardPage from '../pages/DashboardPage';
 import DocumentListPage from '../pages/DocumentListPage';
 import AddDocumentPage from '../pages/AddDocumentPage';
@@ -51,6 +52,7 @@ export default function AppRouter() {
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<GuestRoute><LoginPage /></GuestRoute>} />
       <Route path="/register" element={<GuestRoute><RegisterPage /></GuestRoute>} />
+      <Route path="/verify-email" element={<VerifyEmailPage />} />
 
       {/* Protected — wrapped in AppLayout (sidebar + topbar) */}
       <Route element={<ProtectedRoute><AppLayout /></ProtectedRoute>}>

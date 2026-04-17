@@ -3,6 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { documentService } from '../services/document.service';
 import StatusBadge from '../components/common/StatusBadge';
 import Button from '../components/common/Button';
+import Icon from '../components/common/Icon';
 import styles from './DocumentDetailPage.module.css';
 
 export default function DocumentDetailPage() {
@@ -12,15 +13,14 @@ export default function DocumentDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const refresh = () => documentService.getById(id).then(r => setDoc(r.data.document));
+
   useEffect(() => {
-    documentService.getById(id)
-      .then(res => setDoc(res.data.document))
-      .catch(() => setError('Document not found.'))
-      .finally(() => setLoading(false));
+    refresh().catch(() => setError('Document not found.')).finally(() => setLoading(false));
   }, [id]);
 
   const handleDelete = async () => {
-    if (!confirm('Delete this document permanently?')) return;
+    if (!confirm('Permanently delete this document? This cannot be undone.')) return;
     await documentService.delete(id);
     navigate('/documents');
   };
@@ -28,68 +28,88 @@ export default function DocumentDetailPage() {
   const handleArchive = async () => {
     if (doc.archived) await documentService.unarchive(id);
     else await documentService.archive(id);
-    const res = await documentService.getById(id);
-    setDoc(res.data.document);
+    refresh();
   };
 
-  if (loading) return <div style={{ padding: '4rem', textAlign: 'center' }}><div className="spinner" style={{ margin: '0 auto', width: 32, height: 32 }} /></div>;
-  if (error) return <div className={styles.error}>{error}</div>;
+  const fmt = d => d ? new Date(d).toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' }) : '—';
 
-  const fmt = d => d ? new Date(d).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' }) : '—';
+  if (loading) return (
+    <div className={styles.loadWrap}>
+      <div className="spinner" style={{ width: 28, height: 28 }} />
+    </div>
+  );
+  if (error) return (
+    <div className={styles.errorWrap}><Icon name="alertCircle" size={20} />{error}</div>
+  );
+
+  const rows = [
+    { label: 'Status',         value: <StatusBadge status={doc.status} /> },
+    { label: 'Category',       value: doc.category },
+    { label: 'File type',      value: doc.fileType?.toUpperCase() },
+    { label: 'Issue date',     value: fmt(doc.issueDate) },
+    { label: 'Expiry date',    value: fmt(doc.expiryDate) },
+    { label: 'Uploaded',       value: fmt(doc.createdAt) },
+    { label: 'Last modified',  value: fmt(doc.updatedAt) },
+  ];
 
   return (
     <div className={styles.page}>
       {/* Header */}
       <div className={styles.header}>
-        <button className={styles.back} onClick={() => navigate(-1)}>← Back</button>
+        <button className={styles.back} onClick={() => navigate(-1)}>
+          <Icon name="arrowLeft" size={15} /> Back
+        </button>
         <div className={styles.actions}>
           <Button variant="secondary" size="sm" onClick={handleArchive}>
-            {doc.archived ? '📤 Unarchive' : '📥 Archive'}
+            <Icon name={doc.archived ? 'unarchive' : 'archive'} size={14} />
+            {doc.archived ? 'Unarchive' : 'Archive'}
           </Button>
           <Button variant="secondary" size="sm" onClick={() => navigate(`/documents/${id}/edit`)}>
-            ✏️ Edit
+            <Icon name="edit" size={14} /> Edit
           </Button>
           <a href={doc.fileUrl} target="_blank" rel="noreferrer">
-            <Button size="sm">↗ Open File</Button>
+            <Button variant="accent" size="sm">
+              <Icon name="externalLink" size={14} /> Open File
+            </Button>
           </a>
-          <Button variant="danger" size="sm" onClick={handleDelete}>🗑 Delete</Button>
+          <Button variant="danger" size="sm" onClick={handleDelete}>
+            <Icon name="trash" size={14} /> Delete
+          </Button>
         </div>
       </div>
 
       <div className={styles.body}>
-        {/* Main Panel */}
+        {/* Main */}
         <div className={styles.main}>
-          <div className={styles.docHeader}>
-            <div className={styles.docIcon}>📄</div>
-            <div>
+          <div className={styles.docHero}>
+            <div className={styles.heroIcon}>
+              <Icon name={doc.fileType === 'pdf' ? 'fileText' : 'image'} size={24} />
+            </div>
+            <div className={styles.heroText}>
               <h1 className={styles.docTitle}>{doc.title}</h1>
-              <p className={styles.docMeta}>
-                {doc.category} · {doc.fileType?.toUpperCase()} · Added {fmt(doc.createdAt)}
-              </p>
+              <p className={styles.docSubtitle}>{doc.category} · {doc.fileType?.toUpperCase()}</p>
             </div>
             <StatusBadge status={doc.status} />
           </div>
 
-          {/* File preview hint */}
-          <div className={styles.previewCard}>
-            <div className={styles.previewInner}>
-              <span className={styles.previewIcon}>
-                {doc.fileType === 'pdf' ? '📋' : '🖼'}
-              </span>
+          {/* Preview link */}
+          <div className={styles.previewBanner}>
+            <div className={styles.previewLeft}>
+              <Icon name={doc.fileType === 'pdf' ? 'fileText' : 'image'} size={18} />
               <div>
-                <p className={styles.previewTitle}>{doc.title}</p>
-                <p className={styles.previewSub}>{doc.fileType?.toUpperCase()} File</p>
+                <p className={styles.previewName}>{doc.title}</p>
+                <p className={styles.previewType}>{doc.fileType?.toUpperCase()} · Stored in Cloudinary</p>
               </div>
-              <a href={doc.fileUrl} target="_blank" rel="noreferrer" className={styles.openLink}>
-                Open in new tab →
-              </a>
             </div>
+            <a href={doc.fileUrl} target="_blank" rel="noreferrer" className={styles.openLink}>
+              Open file <Icon name="externalLink" size={13} />
+            </a>
           </div>
 
           {/* Notes */}
           {doc.notes && (
-            <div className={styles.notes}>
-              <h3 className={styles.notesLabel}>Notes</h3>
+            <div className={styles.notesCard}>
+              <p className={styles.notesLabel}>Notes</p>
               <p className={styles.notesText}>{doc.notes}</p>
             </div>
           )}
@@ -98,33 +118,20 @@ export default function DocumentDetailPage() {
         {/* Sidebar */}
         <aside className={styles.sidebar}>
           <div className={styles.metaCard}>
-            <h3 className={styles.metaTitle}>Document Details</h3>
-            <div className={styles.metaRows}>
-              {[
-                { label: 'Status', value: <StatusBadge status={doc.status} /> },
-                { label: 'Category', value: doc.category },
-                { label: 'File Type', value: doc.fileType?.toUpperCase() },
-                { label: 'Issue Date', value: fmt(doc.issueDate) },
-                { label: 'Expiry Date', value: fmt(doc.expiryDate) },
-                { label: 'Uploaded', value: fmt(doc.createdAt) },
-                { label: 'Last Modified', value: fmt(doc.updatedAt) },
-              ].map(row => (
-                <div key={row.label} className={styles.metaRow}>
-                  <span className={styles.metaLabel}>{row.label}</span>
-                  <span className={styles.metaValue}>{row.value}</span>
-                </div>
-              ))}
-            </div>
+            <p className={styles.metaTitle}>Document Details</p>
+            {rows.map(r => (
+              <div key={r.label} className={styles.metaRow}>
+                <span className={styles.metaLabel}>{r.label}</span>
+                <span className={styles.metaValue}>{r.value}</span>
+              </div>
+            ))}
           </div>
 
-          {/* Tags */}
           {doc.tags?.length > 0 && (
             <div className={styles.metaCard}>
-              <h3 className={styles.metaTitle}>Tags</h3>
+              <p className={styles.metaTitle}>Tags</p>
               <div className={styles.tags}>
-                {doc.tags.map(t => (
-                  <span key={t} className={styles.tag}>{t}</span>
-                ))}
+                {doc.tags.map(t => <span key={t} className={styles.tag}>{t}</span>)}
               </div>
             </div>
           )}

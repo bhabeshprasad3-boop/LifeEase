@@ -1,20 +1,36 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { reminderService } from '../services/reminder.service';
+import Icon from '../components/common/Icon';
 import styles from './RemindersPage.module.css';
 
+const TYPE_ICON = {
+  expiry_warning: 'clock',
+  expired: 'xCircle',
+  upload: 'checkCircle',
+  system: 'info',
+};
+
 function NotifItem({ notif, onRead, navigate }) {
-  const typeIcon = { expiry_warning: '⏳', expired: '❌', upload: '✅', system: 'ℹ️' };
-  const fmt = d => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  const fmt = d => new Date(d).toLocaleDateString('en-GB', { day:'numeric', month:'short', year:'numeric' });
 
   return (
-    <div className={`${styles.notifItem} ${!notif.isRead ? styles.unread : ''}`}
-      onClick={() => { if (!notif.isRead) onRead(notif._id); if (notif.documentId) navigate(`/documents/${notif.documentId._id || notif.documentId}`); }}>
-      <div className={styles.notifIcon}>{typeIcon[notif.type] || 'ℹ️'}</div>
-      <div className={styles.notifBody}>
-        <p className={styles.notifTitle}>{notif.title}</p>
-        <p className={styles.notifMsg}>{notif.message}</p>
-        <span className={styles.notifTime}>{fmt(notif.createdAt)}</span>
+    <div
+      className={`${styles.item} ${!notif.isRead ? styles.unread : ''}`}
+      onClick={() => {
+        if (!notif.isRead) onRead(notif._id);
+        if (notif.documentId) navigate(`/documents/${notif.documentId._id || notif.documentId}`);
+      }}
+      role="button"
+      tabIndex={0}
+    >
+      <div className={`${styles.itemIcon} ${styles[`icon_${notif.type}`]}`}>
+        <Icon name={TYPE_ICON[notif.type] || 'info'} size={16} />
+      </div>
+      <div className={styles.itemBody}>
+        <p className={styles.itemTitle}>{notif.title}</p>
+        <p className={styles.itemMsg}>{notif.message}</p>
+        <span className={styles.itemTime}>{fmt(notif.createdAt)}</span>
       </div>
       {!notif.isRead && <span className={styles.unreadDot} />}
     </div>
@@ -37,44 +53,43 @@ export default function RemindersPage() {
     setNotifications(prev => prev.map(n => n._id === id ? { ...n, isRead: true } : n));
   };
 
-  const upcoming = notifications.filter(n => !n.isRead && ['expiry_warning', 'expired'].includes(n.type));
-  const past = notifications.filter(n => n.isRead || !['expiry_warning', 'expired'].includes(n.type));
+  const urgent  = notifications.filter(n => !n.isRead && ['expiry_warning', 'expired'].includes(n.type));
+  const history = notifications.filter(n => n.isRead || !['expiry_warning', 'expired'].includes(n.type));
 
   return (
     <div className={styles.page}>
-      <div className={styles.header}>
+      <div className={styles.heading}>
         <h1 className={styles.title}>Notifications</h1>
-        <p className={styles.subtitle}>Action required for upcoming expirations.</p>
+        <p className={styles.subtitle}>Stay ahead of document expirations.</p>
       </div>
 
       {loading ? (
-        <div className={styles.loadList}>
+        <div className={styles.list}>
           {[...Array(4)].map((_, i) => <div key={i} className={`skeleton ${styles.skeletonItem}`} />)}
         </div>
       ) : (
         <>
-          {upcoming.length > 0 && (
-            <section className={styles.section}>
-              <h2 className={styles.sectionTitle}>Upcoming Expirations</h2>
+          {urgent.length > 0 && (
+            <section>
+              <p className={styles.sectionLabel}>Requires Attention</p>
               <div className={styles.list}>
-                {upcoming.map(n => (
-                  <NotifItem key={n._id} notif={n} onRead={handleRead} navigate={navigate} />
-                ))}
+                {urgent.map(n => <NotifItem key={n._id} notif={n} onRead={handleRead} navigate={navigate} />)}
               </div>
             </section>
           )}
 
-          <section className={styles.section}>
-            <h2 className={styles.sectionTitle}>Past Activity</h2>
-            {past.length === 0 ? (
-              <p className={styles.emptyText}>
-                {upcoming.length === 0 ? '🎉 All caught up! No notifications.' : 'No past activity yet.'}
-              </p>
+          <section>
+            <p className={styles.sectionLabel}>Activity History</p>
+            {history.length === 0 && urgent.length === 0 ? (
+              <div className={styles.emptyState}>
+                <Icon name="checkCircle" size={24} style={{ color: 'var(--status-active)' }} />
+                <p className={styles.emptyText}>All clear — no notifications yet.</p>
+              </div>
+            ) : history.length === 0 ? (
+              <p className={styles.emptyNote}>No past activity.</p>
             ) : (
               <div className={styles.list}>
-                {past.map(n => (
-                  <NotifItem key={n._id} notif={n} onRead={handleRead} navigate={navigate} />
-                ))}
+                {history.map(n => <NotifItem key={n._id} notif={n} onRead={handleRead} navigate={navigate} />)}
               </div>
             )}
           </section>

@@ -32,6 +32,21 @@ const userSchema = new mongoose.Schema(
       inApp: { type: Boolean, default: true },
       daysBefore: { type: [Number], default: [30, 7, 1] },
     },
+
+    // ── Email verification ──────────────────────────────────────
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    // Stored as a bcrypt hash (never expose raw OTP in DB)
+    verificationCode: {
+      type: String,
+      select: false,
+    },
+    verificationCodeExpiresAt: {
+      type: Date,
+      select: false,
+    },
   },
   {
     timestamps: true,
@@ -55,6 +70,8 @@ userSchema.methods.comparePassword = async function (candidatePassword) {
 userSchema.methods.toJSON = function () {
   const obj = this.toObject();
   delete obj.password;
+  delete obj.verificationCode;
+  delete obj.verificationCodeExpiresAt;
   delete obj.__v;
   return obj;
 };

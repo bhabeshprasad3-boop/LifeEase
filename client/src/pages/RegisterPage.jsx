@@ -3,7 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import InputField from '../components/common/InputField';
 import Button from '../components/common/Button';
+import Icon from '../components/common/Icon';
 import styles from './AuthPage.module.css';
+
+const features = ['Free to get started', 'Secure cloud storage', 'Renewal reminders'];
 
 export default function RegisterPage() {
   const { register } = useAuth();
@@ -29,8 +32,9 @@ export default function RegisterPage() {
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setLoading(true); setApiError('');
     try {
-      await register(form);
-      navigate('/dashboard');
+      const res = await register(form);
+      // Backend returns { email, requiresVerification } — redirect to OTP page
+      navigate(`/verify-email?email=${encodeURIComponent(res.data.email)}`);
     } catch (err) {
       setApiError(err.response?.data?.message || 'Registration failed. Please try again.');
     } finally {
@@ -47,15 +51,20 @@ export default function RegisterPage() {
     <div className={styles.page}>
       <div className={styles.brandPanel}>
         <div className={styles.brandInner}>
-          <div className={styles.brandLogo}>L</div>
+          <div className={styles.brandLogo}>
+            <Icon name="shield" size={22} />
+          </div>
           <h1 className={styles.brandTitle}>LifeEase</h1>
           <p className={styles.brandDesc}>
-            Join thousands who trust LifeEase with their most important documents.
+            Join thousands who trust LifeEase to secure and organise their most important documents.
           </p>
           <div className={styles.brandFeatures}>
-            {['Free to get started', 'Secure cloud storage', 'Renewal reminders'].map(f => (
+            {features.map(f => (
               <div key={f} className={styles.brandFeature}>
-                <span className={styles.featureCheck}>✓</span> {f}
+                <span className={styles.featureCheck}>
+                  <Icon name="check" size={10} />
+                </span>
+                {f}
               </div>
             ))}
           </div>
@@ -64,16 +73,16 @@ export default function RegisterPage() {
 
       <div className={styles.formPanel}>
         <div className={styles.formCard}>
-          <p className={styles.formEyebrow}>The Vault</p>
+          <p className={styles.formEyebrow}>Get Started</p>
           <h2 className={styles.formTitle}>Create your account.</h2>
-          <p className={styles.formSubtitle}>Start securing your documents today.</p>
+          <p className={styles.formSubtitle}>Start securing your documents today — it's free.</p>
 
           {apiError && <div className={styles.apiError}>{apiError}</div>}
 
           <form onSubmit={handleSubmit} className={styles.form} noValidate>
             <InputField
               label="Full name"
-              id="name"
+              id="reg-name"
               type="text"
               placeholder="Your full name"
               value={form.name}
@@ -83,7 +92,7 @@ export default function RegisterPage() {
             />
             <InputField
               label="Email address"
-              id="email"
+              id="reg-email"
               type="email"
               placeholder="you@example.com"
               value={form.email}
@@ -93,21 +102,21 @@ export default function RegisterPage() {
             />
             <InputField
               label="Password"
-              id="password"
+              id="reg-password"
               type="password"
-              placeholder="Min. 6 characters"
+              placeholder="At least 6 characters"
               value={form.password}
               onChange={change('password')}
               error={errors.password}
               autoComplete="new-password"
             />
-            <Button type="submit" loading={loading} fullWidth>
+            <Button type="submit" loading={loading} fullWidth size="lg">
               Create Account
             </Button>
           </form>
 
           <p className={styles.switchLink}>
-            Already have an account? <Link to="/login">Sign in →</Link>
+            Already have an account? <Link to="/login">Sign in</Link>
           </p>
         </div>
       </div>

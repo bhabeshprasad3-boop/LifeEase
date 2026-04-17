@@ -4,25 +4,26 @@ import { documentService } from '../services/document.service';
 import StatusBadge from '../components/common/StatusBadge';
 import Button from '../components/common/Button';
 import EmptyState from '../components/common/EmptyState';
+import Icon from '../components/common/Icon';
 import styles from './DocumentListPage.module.css';
 
-const CATEGORIES = ['All', 'Identity', 'Vehicle', 'Education', 'Health', 'Finance', 'Property', 'Travel', 'Personal', 'Other'];
-const STATUSES = ['All', 'Active', 'Expiring Soon', 'Expired', 'Archived'];
-const SORTS = [
-  { label: 'Newest', value: 'newest' },
-  { label: 'Oldest', value: 'oldest' },
-  { label: 'Nearest Expiry', value: 'nearest-expiry' },
-];
+const CATEGORIES = ['All','Identity','Vehicle','Education','Health','Finance','Property','Travel','Personal','Other'];
+const STATUSES   = ['All','Active','Expiring Soon','Expired','Archived'];
+const SORTS      = [{ label:'Newest', value:'newest' },{ label:'Oldest', value:'oldest' },{ label:'Nearest Expiry', value:'nearest-expiry' }];
 
-const ICONS = { Identity:'🪪',Vehicle:'🚗',Education:'🎓',Health:'❤️‍🩹',Finance:'💰',Property:'🏠',Travel:'✈️',Personal:'📌',Other:'📄' };
+const CAT_ICON = {
+  Identity:'identity', Vehicle:'vehicle', Education:'education',
+  Health:'health', Finance:'finance', Property:'property',
+  Travel:'travel', Personal:'personal', Other:'fileText',
+};
 
 export default function DocumentListPage() {
   const navigate = useNavigate();
   const [docs, setDocs] = useState([]);
-  const [pagination, setPagination] = useState({ page: 1, pages: 1, total: 0 });
+  const [pagination, setPagination] = useState({ page:1, pages:1, total:0 });
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
-    search: '', category: 'All', status: '', archived: '', sort: 'newest', page: 1,
+    search:'', category:'All', status:'', sort:'newest', page:1,
   });
 
   const fetchDocs = useCallback(async () => {
@@ -37,24 +38,20 @@ export default function DocumentListPage() {
       }
       params.sort = filters.sort;
       params.page = filters.page;
-
       const res = await documentService.getAll(params);
       setDocs(res.data.documents);
       setPagination(res.data.pagination);
-    } catch {
-      setDocs([]);
-    } finally {
-      setLoading(false);
-    }
+    } catch { setDocs([]); }
+    finally { setLoading(false); }
   }, [filters]);
 
   useEffect(() => { fetchDocs(); }, [fetchDocs]);
 
-  const setFilter = (key, value) => setFilters(f => ({ ...f, [key]: value, page: 1 }));
+  const setFilter = (k, v) => setFilters(f => ({ ...f, [k]: v, page: 1 }));
 
   const handleDelete = async (e, id) => {
     e.stopPropagation();
-    if (!confirm('Delete this document permanently?')) return;
+    if (!confirm('Delete this document permanently? This cannot be undone.')) return;
     await documentService.delete(id);
     fetchDocs();
   };
@@ -71,38 +68,40 @@ export default function DocumentListPage() {
       {/* Header */}
       <div className={styles.header}>
         <div>
-          <h1 className={styles.title}>Document Library</h1>
-          <p className={styles.subtitle}>Manage and access your important files.</p>
+          <h1 className={styles.title}>Documents</h1>
+          <p className={styles.subtitle}>{pagination.total} document{pagination.total !== 1 ? 's' : ''} in your vault</p>
         </div>
-        <Button onClick={() => navigate('/documents/add')}>+ Upload Document</Button>
+        <Button onClick={() => navigate('/documents/add')}>
+          <Icon name="plus" size={14} /> New Document
+        </Button>
       </div>
 
-      {/* Filters */}
+      {/* Toolbar */}
       <div className={styles.toolbar}>
-        <input
-          className={styles.searchInput}
-          type="text"
-          placeholder="🔍  Search by title or tag..."
-          value={filters.search}
-          onChange={e => setFilter('search', e.target.value)}
-        />
-        <select className={styles.select} value={filters.category} onChange={e => setFilter('category', e.target.value)}>
-          {CATEGORIES.map(c => <option key={c}>{c}</option>)}
-        </select>
+        <div className={styles.searchWrap}>
+          <Icon name="search" size={15} className={styles.searchIcon} />
+          <input
+            className={styles.searchInput}
+            type="text"
+            placeholder="Search by title or tag…"
+            value={filters.search}
+            onChange={e => setFilter('search', e.target.value)}
+          />
+        </div>
         <select className={styles.select} value={filters.status} onChange={e => setFilter('status', e.target.value)}>
-          {STATUSES.map(s => <option key={s} value={s}>{s}</option>)}
+          {STATUSES.map(s => <option key={s} value={s}>{s} Status</option>)}
         </select>
         <select className={styles.select} value={filters.sort} onChange={e => setFilter('sort', e.target.value)}>
           {SORTS.map(s => <option key={s.value} value={s.value}>{s.label}</option>)}
         </select>
       </div>
 
-      {/* Category Chips */}
-      <div className={styles.catChips}>
+      {/* Category tabs */}
+      <div className={styles.cats}>
         {CATEGORIES.map(c => (
           <button
             key={c}
-            className={`${styles.chip} ${filters.category === c ? styles.chipActive : ''}`}
+            className={`${styles.cat} ${filters.category === c ? styles.catActive : ''}`}
             onClick={() => setFilter('category', c)}
           >{c}</button>
         ))}
@@ -114,8 +113,8 @@ export default function DocumentListPage() {
           {[...Array(6)].map((_, i) => <div key={i} className={`skeleton ${styles.skeletonCard}`} />)}
         </div>
       ) : docs.length === 0 ? (
-        <EmptyState icon="📂" title="No documents found"
-          message="Try adjusting your filters or upload your first document."
+        <EmptyState icon="documents" title="No documents found"
+          message="Adjust your filters or upload a new document."
           action={<Button onClick={() => navigate('/documents/add')}>Upload Document</Button>} />
       ) : (
         <>
@@ -124,36 +123,51 @@ export default function DocumentListPage() {
               <div key={doc._id} className={styles.card}
                 onClick={() => navigate(`/documents/${doc._id}`)} role="button" tabIndex={0}>
                 <div className={styles.cardTop}>
-                  <div className={styles.cardIcon}>{ICONS[doc.category] || '📄'}</div>
+                  <div className={styles.cardIcon}>
+                    <Icon name={CAT_ICON[doc.category] || 'fileText'} size={17} />
+                  </div>
                   <StatusBadge status={doc.status} />
                 </div>
                 <h3 className={styles.cardTitle}>{doc.title}</h3>
                 <p className={styles.cardMeta}>
-                  {doc.category} · {doc.fileType?.toUpperCase()}
-                  {doc.expiryDate && ` · Expires ${new Date(doc.expiryDate).toLocaleDateString()}`}
+                  {doc.category}{doc.fileType ? ` · ${doc.fileType.toUpperCase()}` : ''}
+                  {doc.expiryDate ? ` · Exp. ${new Date(doc.expiryDate).toLocaleDateString()}` : ''}
                 </p>
                 {doc.tags?.length > 0 && (
-                  <div className={styles.cardTags}>
+                  <div className={styles.tags}>
                     {doc.tags.slice(0, 3).map(t => <span key={t} className={styles.tag}>{t}</span>)}
                   </div>
                 )}
                 <div className={styles.cardActions} onClick={e => e.stopPropagation()}>
-                  <button className={styles.actionBtn} onClick={() => navigate(`/documents/${doc._id}/edit`)} title="Edit">✏️</button>
-                  <button className={styles.actionBtn} onClick={e => handleArchive(e, doc)} title={doc.archived ? 'Unarchive' : 'Archive'}>
-                    {doc.archived ? '📤' : '📥'}
+                  <button className={styles.actionBtn} onClick={() => navigate(`/documents/${doc._id}/edit`)} title="Edit">
+                    <Icon name="edit" size={14} />
                   </button>
-                  <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={e => handleDelete(e, doc._id)} title="Delete">🗑</button>
+                  <button className={styles.actionBtn} onClick={e => handleArchive(e, doc)} title={doc.archived ? 'Unarchive' : 'Archive'}>
+                    <Icon name={doc.archived ? 'unarchive' : 'archive'} size={14} />
+                  </button>
+                  <button className={`${styles.actionBtn} ${styles.deleteBtn}`} onClick={e => handleDelete(e, doc._id)} title="Delete">
+                    <Icon name="trash" size={14} />
+                  </button>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Pagination */}
           {pagination.pages > 1 && (
             <div className={styles.pagination}>
-              <button disabled={filters.page <= 1} onClick={() => setFilter('page', filters.page - 1)} className={styles.pageBtn}>← Prev</button>
-              <span className={styles.pageInfo}>Page {pagination.page} of {pagination.pages} · {pagination.total} docs</span>
-              <button disabled={filters.page >= pagination.pages} onClick={() => setFilter('page', filters.page + 1)} className={styles.pageBtn}>Next →</button>
+              <button disabled={filters.page <= 1}
+                onClick={() => setFilter('page', filters.page - 1)}
+                className={styles.pageBtn}>
+                <Icon name="arrowLeft" size={14} /> Prev
+              </button>
+              <span className={styles.pageInfo}>
+                Page {pagination.page} of {pagination.pages}
+              </span>
+              <button disabled={filters.page >= pagination.pages}
+                onClick={() => setFilter('page', filters.page + 1)}
+                className={styles.pageBtn}>
+                Next <Icon name="arrowRight" size={14} />
+              </button>
             </div>
           )}
         </>

@@ -2,11 +2,12 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   min-height: 100vh;
+  background: var(--bg-base);
 }
 
 /* ── Brand Panel ── */
 .brandPanel {
-  background: linear-gradient(160deg, var(--primary) 0%, var(--primary-container) 100%);
+  background: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -18,48 +19,36 @@
 .brandPanel::before {
   content: '';
   position: absolute;
-  width: 400px; height: 400px;
-  background: rgba(255,255,255,0.03);
-  border-radius: 50%;
-  top: -100px; left: -100px;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,0.04) 0%, transparent 60%),
+              radial-gradient(ellipse at 70% 80%, rgba(255,255,255,0.03) 0%, transparent 60%);
+  pointer-events: none;
 }
 
-.brandPanel::after {
-  content: '';
-  position: absolute;
-  width: 300px; height: 300px;
-  background: rgba(255,255,255,0.04);
-  border-radius: 50%;
-  bottom: -80px; right: -80px;
-}
-
-.brandInner { position: relative; z-index: 1; max-width: 400px; }
+.brandInner { position: relative; z-index: 1; max-width: 380px; }
 
 .brandLogo {
-  width: 52px; height: 52px;
+  width: 44px; height: 44px;
   background: rgba(255,255,255,0.1);
   border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--on-primary);
+  color: rgba(255,255,255,0.9);
   margin-bottom: var(--space-6);
 }
 
 .brandTitle {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 600;
+  font-size: 1.875rem;
+  font-weight: 700;
   color: var(--on-primary);
   margin-bottom: var(--space-4);
+  letter-spacing: -0.02em;
 }
 
 .brandDesc {
-  color: rgba(255,255,255,0.7);
-  font-size: 1rem;
+  color: rgba(255,255,255,0.65);
+  font-size: 0.9375rem;
   line-height: 1.7;
   margin-bottom: var(--space-8);
 }
@@ -67,16 +56,22 @@
 .brandFeatures { display: flex; flex-direction: column; gap: var(--space-3); }
 
 .brandFeature {
-  color: rgba(255,255,255,0.85);
-  font-size: 0.9rem;
   display: flex;
   align-items: center;
   gap: var(--space-3);
+  color: rgba(255,255,255,0.8);
+  font-size: 0.875rem;
 }
 
 .featureCheck {
-  color: var(--tertiary-fixed-dim);
-  font-weight: 700;
+  width: 18px; height: 18px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: rgba(255,255,255,0.9);
 }
 
 /* ── Form Panel ── */
@@ -84,46 +79,43 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--space-10);
-  background: var(--surface);
+  padding: var(--space-10) var(--space-12);
+  background: var(--bg-base);
 }
 
-.formCard {
-  width: 100%;
-  max-width: 400px;
-}
+.formCard { width: 100%; max-width: 380px; }
 
 .formEyebrow {
-  font-family: var(--font-label);
-  font-size: 0.7rem;
+  font-size: 0.6875rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--surface-tint);
+  color: var(--accent);
   margin-bottom: var(--space-3);
 }
 
 .formTitle {
-  font-family: var(--font-display);
-  font-size: 2rem;
-  font-weight: 600;
-  color: var(--on-surface);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
   margin-bottom: var(--space-1);
 }
 
 .formSubtitle {
-  color: var(--on-surface-variant);
+  color: var(--text-secondary);
   font-size: 0.9375rem;
   margin-bottom: var(--space-8);
 }
 
 .apiError {
-  background: var(--error-container);
-  color: var(--on-error-container);
+  background: var(--status-error-bg);
+  color: var(--status-error-text);
   padding: var(--space-3) var(--space-4);
   border-radius: var(--radius-md);
   font-size: 0.875rem;
   margin-bottom: var(--space-4);
+  border-left: 3px solid var(--status-error);
 }
 
 .form { display: flex; flex-direction: column; gap: var(--space-4); }
@@ -132,11 +124,11 @@
   margin-top: var(--space-6);
   text-align: center;
   font-size: 0.875rem;
-  color: var(--on-surface-variant);
+  color: var(--text-muted);
 }
 
 .switchLink a {
-  color: var(--surface-tint);
+  color: var(--accent);
   font-weight: 600;
 }
 
@@ -144,5 +136,5 @@
 @media (max-width: 768px) {
   .page { grid-template-columns: 1fr; }
   .brandPanel { display: none; }
-  .formPanel { padding: var(--space-6); }
+  .formPanel { padding: var(--space-8) var(--space-6); align-items: flex-start; padding-top: var(--space-16); }
 }

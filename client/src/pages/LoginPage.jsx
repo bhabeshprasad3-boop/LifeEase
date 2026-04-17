@@ -3,7 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import InputField from '../components/common/InputField';
 import Button from '../components/common/Button';
+import Icon from '../components/common/Icon';
 import styles from './AuthPage.module.css';
+
+const features = ['Bank-level file encryption', 'Smart expiry reminders', '9 document categories'];
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -30,7 +33,12 @@ export default function LoginPage() {
       await login(form);
       navigate('/dashboard');
     } catch (err) {
-      setApiError(err.response?.data?.message || 'Login failed. Please try again.');
+      // If backend returns 403, user exists but email not verified — redirect to OTP page
+      if (err.response?.status === 403) {
+        navigate(`/verify-email?email=${encodeURIComponent(form.email)}`);
+        return;
+      }
+      setApiError(err.response?.data?.message || 'Invalid credentials. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -43,37 +51,40 @@ export default function LoginPage() {
 
   return (
     <div className={styles.page}>
-      {/* Left Panel — Branding */}
       <div className={styles.brandPanel}>
         <div className={styles.brandInner}>
-          <div className={styles.brandLogo}>L</div>
+          <div className={styles.brandLogo}>
+            <Icon name="shield" size={22} />
+          </div>
           <h1 className={styles.brandTitle}>LifeEase</h1>
           <p className={styles.brandDesc}>
-            Your architectural vault for the documents that define your life.
+            A secure, organised vault for every document that matters in your life.
           </p>
           <div className={styles.brandFeatures}>
-            {['Bank-level encryption', 'Smart expiry reminders', '9 document categories'].map(f => (
+            {features.map(f => (
               <div key={f} className={styles.brandFeature}>
-                <span className={styles.featureCheck}>✓</span> {f}
+                <span className={styles.featureCheck}>
+                  <Icon name="check" size={10} />
+                </span>
+                {f}
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Right Panel — Form */}
       <div className={styles.formPanel}>
         <div className={styles.formCard}>
-          <p className={styles.formEyebrow}>The Vault</p>
+          <p className={styles.formEyebrow}>Secure Access</p>
           <h2 className={styles.formTitle}>Welcome back.</h2>
-          <p className={styles.formSubtitle}>Sign in to access your documents.</p>
+          <p className={styles.formSubtitle}>Sign in to access your document vault.</p>
 
           {apiError && <div className={styles.apiError}>{apiError}</div>}
 
           <form onSubmit={handleSubmit} className={styles.form} noValidate>
             <InputField
               label="Email address"
-              id="email"
+              id="login-email"
               type="email"
               placeholder="you@example.com"
               value={form.email}
@@ -83,7 +94,7 @@ export default function LoginPage() {
             />
             <InputField
               label="Password"
-              id="password"
+              id="login-password"
               type="password"
               placeholder="Your password"
               value={form.password}
@@ -91,14 +102,13 @@ export default function LoginPage() {
               error={errors.password}
               autoComplete="current-password"
             />
-            <Button type="submit" loading={loading} fullWidth>
-              Sign in to Vault
+            <Button type="submit" loading={loading} fullWidth size="lg">
+              Sign in
             </Button>
           </form>
 
           <p className={styles.switchLink}>
-            Don't have an account?{' '}
-            <Link to="/register">Create one →</Link>
+            Don't have an account? <Link to="/register">Create one</Link>
           </p>
         </div>
       </div>

@@ -1,69 +1,72 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import Icon from '../common/Icon';
 import styles from './Sidebar.module.css';
 
-const navItems = [
-  { to: '/dashboard',  icon: '⊞', label: 'Dashboard' },
-  { to: '/documents',  icon: '🗂', label: 'Documents'  },
-  { to: '/reminders',  icon: '🔔', label: 'Notifications' },
-  { to: '/settings',   icon: '⚙', label: 'Settings'  },
+const NAV = [
+  { to: '/dashboard', icon: 'dashboard', label: 'Dashboard'      },
+  { to: '/documents', icon: 'documents', label: 'Documents'       },
+  { to: '/reminders', icon: 'bell',      label: 'Notifications'   },
+  { to: '/settings',  icon: 'settings',  label: 'Settings'        },
 ];
 
 export default function Sidebar() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
+  const initials = user?.name
+    ? user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
+    : '??';
+
   const handleLogout = async () => {
     await logout();
     navigate('/login');
   };
 
-  const initials = user?.name
-    ? user.name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()
-    : 'U';
-
   return (
     <aside className={styles.sidebar}>
       {/* Brand */}
       <div className={styles.brand}>
-        <div className={styles.brandIcon}>
-          <span>L</span>
+        <div className={styles.brandMark}>
+          <Icon name="shield" size={16} />
         </div>
-        <div>
-          <p className={styles.brandName}>The Vault</p>
-          <p className={styles.brandSub}>Premium Management</p>
+        <div className={styles.brandText}>
+          <span className={styles.brandName}>LifeEase</span>
+          <span className={styles.brandTag}>Document Vault</span>
         </div>
       </div>
 
-      {/* Navigation */}
+      {/* Nav */}
       <nav className={styles.nav}>
-        {navItems.map(({ to, icon, label }) => (
+        <p className={styles.navLabel}>Navigation</p>
+        {NAV.map(({ to, icon, label }) => (
           <NavLink
             key={to}
             to={to}
             className={({ isActive }) =>
-              `${styles.navItem} ${isActive ? styles.active : ''}`
+              `${styles.item} ${isActive ? styles.active : ''}`
             }
           >
-            <span className={styles.navIcon}>{icon}</span>
-            <span className={styles.navLabel}>{label}</span>
+            <span className={styles.itemIcon}>
+              <Icon name={icon} size={16} />
+            </span>
+            <span className={styles.itemLabel}>{label}</span>
           </NavLink>
         ))}
       </nav>
 
-      {/* User Footer */}
+      {/* User footer */}
       <div className={styles.footer}>
-        <div className={styles.avatar}>{initials}</div>
-        <div className={styles.userInfo}>
-          <p className={styles.userName}>{user?.name}</p>
-          <p className={styles.userEmail}>{user?.email}</p>
+        <div className={styles.userRow}>
+          <div className={styles.avatar}>{initials}</div>
+          <div className={styles.userMeta}>
+            <p className={styles.userName}>{user?.name}</p>
+            <p className={styles.userEmail}>{user?.email}</p>
+          </div>
         </div>
-        <button
-          className={styles.logoutBtn}
-          onClick={handleLogout}
-          title="Logout"
-        >
-          ↩
+        <button className={styles.logoutBtn} onClick={handleLogout} title="Sign out">
+          <Icon name="logout" size={15} />
+          <span>Sign out</span>
         </button>
       </div>
     </aside>

@@ -53,7 +53,14 @@ export function AuthProvider({ children }) {
   }, [clearSession]);
 
   const register = async (data) => {
+    // Backend returns { email, requiresVerification } — no token/user yet
     const res = await authService.register(data);
+    return res;
+  };
+
+  const verifyEmail = async (data) => {
+    // After OTP verification, backend returns { user, token }
+    const res = await authService.verifyEmail(data);
     saveSession(res.data.user, res.data.token);
     return res;
   };
@@ -75,7 +82,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, register, login, logout, updateUser, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, token, loading, register, verifyEmail, login, logout, updateUser, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );

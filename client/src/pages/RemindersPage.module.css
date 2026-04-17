@@ -1,86 +1,109 @@
-.page { display: flex; flex-direction: column; gap: var(--space-8); max-width: 760px; }
+.page { display: flex; flex-direction: column; gap: var(--space-6); max-width: 720px; }
 
-.header { margin-bottom: var(--space-2); }
+.heading { margin-bottom: var(--space-2); }
 
 .title {
-  font-family: var(--font-display);
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: var(--on-surface);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
-.subtitle { color: var(--on-surface-variant); margin-top: var(--space-1); }
+.subtitle { font-size: 0.875rem; color: var(--text-secondary); margin-top: 2px; }
 
-.section { display: flex; flex-direction: column; gap: var(--space-3); }
-
-.sectionTitle {
-  font-family: var(--font-display);
-  font-size: 1rem;
-  font-weight: 600;
-  color: var(--on-surface);
-  padding-bottom: var(--space-2);
-  border-bottom: 1px solid rgba(198,198,205,0.12);
+.sectionLabel {
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: var(--space-3);
 }
 
-.list { display: flex; flex-direction: column; gap: var(--space-3); }
+.list { display: flex; flex-direction: column; gap: var(--space-2); }
 
-.notifItem {
+.item {
   display: flex;
   align-items: flex-start;
   gap: var(--space-4);
-  background: var(--surface-container-lowest);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-lg);
-  padding: var(--space-5);
-  box-shadow: var(--shadow-card);
+  padding: var(--space-4) var(--space-5);
   cursor: pointer;
   transition: all var(--transition-fast);
   position: relative;
 }
-.notifItem:hover { transform: translateX(4px); box-shadow: var(--shadow-float); }
 
-.unread { background: var(--secondary-container); }
+.item:hover {
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-sm);
+  transform: translateX(3px);
+}
 
-.notifIcon {
-  font-size: 1.5rem;
-  flex-shrink: 0;
-  width: 40px; height: 40px;
-  background: var(--surface-container);
+.unread {
+  border-left: 3px solid var(--accent);
+  background: var(--accent-muted);
+}
+
+.itemIcon {
+  width: 36px; height: 36px;
   border-radius: var(--radius-md);
+  background: var(--surface-container);
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+  color: var(--text-muted);
 }
 
-.notifBody { flex: 1; }
+.icon_expiry_warning { background: var(--status-warn-bg); color: var(--status-warn); }
+.icon_expired        { background: var(--status-error-bg); color: var(--status-error); }
+.icon_upload         { background: var(--status-active-bg); color: var(--status-active); }
+.icon_system         { background: var(--accent-muted); color: var(--accent); }
 
-.notifTitle {
+.itemBody { flex: 1; min-width: 0; }
+
+.itemTitle {
   font-size: 0.9375rem;
   font-weight: 600;
-  color: var(--on-surface);
-  margin-bottom: var(--space-1);
+  color: var(--text-primary);
+  margin-bottom: 2px;
 }
 
-.notifMsg {
+.itemMsg {
   font-size: 0.875rem;
-  color: var(--on-surface-variant);
+  color: var(--text-secondary);
   line-height: 1.5;
   margin-bottom: var(--space-2);
 }
 
-.notifTime {
-  font-size: 0.75rem;
-  color: var(--outline);
-}
+.itemTime { font-size: 0.75rem; color: var(--text-muted); }
 
 .unreadDot {
   width: 8px; height: 8px;
-  background: var(--surface-tint);
+  background: var(--accent);
   border-radius: 50%;
   flex-shrink: 0;
   margin-top: 6px;
 }
 
-.emptyText { color: var(--on-surface-variant); padding: var(--space-6) 0; font-size: 0.9375rem; }
+/* Empty */
+.emptyState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-12) 0;
+  text-align: center;
+}
 
-.loadList { display: flex; flex-direction: column; gap: var(--space-3); }
-.skeletonItem { height: 80px; border-radius: var(--radius-lg); }
+.emptyText {
+  font-size: 0.9375rem;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.emptyNote { font-size: 0.9375rem; color: var(--text-muted); padding: var(--space-4) 0; }
+
+.skeletonItem { height: 78px; border-radius: var(--radius-lg); }

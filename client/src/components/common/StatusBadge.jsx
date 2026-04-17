@@ -1,15 +1,21 @@
 export default function StatusBadge({ status }) {
   const map = {
-    'Active':        { cls: 'badge-active',   dot: '#4edea3' },
-    'Expiring Soon': { cls: 'badge-expiring', dot: '#d97706' },
-    'Expired':       { cls: 'badge-expired',  dot: '#ba1a1a' },
-    'Archived':      { cls: 'badge-archived', dot: '#76777d' },
+    'Active':        { cls: 'badge-active',   dot: 'var(--status-active)'  },
+    'Expiring Soon': { cls: 'badge-expiring', dot: 'var(--status-warn)'    },
+    'Expired':       { cls: 'badge-expired',  dot: 'var(--status-error)'   },
+    'Archived':      { cls: 'badge-archived', dot: 'var(--status-muted)'   },
   };
   const { cls, dot } = map[status] || map['Archived'];
 
   return (
     <span className={`badge ${cls}`}>
-      <span style={{ width: 6, height: 6, borderRadius: '50%', background: dot, flexShrink: 0 }} />
+      <span style={{
+        width: 5, height: 5,
+        borderRadius: '50%',
+        background: dot,
+        display: 'inline-block',
+        flexShrink: 0,
+      }} />
       {status}
     </span>
   );

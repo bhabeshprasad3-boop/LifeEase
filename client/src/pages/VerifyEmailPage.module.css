@@ -1,0 +1,180 @@
+.page {
+  min-height: 100vh;
+  background: var(--bg-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-8);
+}
+
+.container {
+  width: 100%;
+  max-width: 420px;
+  text-align: center;
+}
+
+/* Logo */
+.logoWrap {
+  width: 52px; height: 52px;
+  background: var(--primary);
+  color: var(--on-primary);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-6);
+}
+
+.title {
+  font-size: 1.625rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-3);
+}
+
+.subtitle {
+  font-size: 0.9375rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+  margin-bottom: var(--space-8);
+}
+
+.subtitle strong {
+  color: var(--text-primary);
+  font-weight: 600;
+}
+
+/* Messages */
+.errorBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: var(--status-error-bg);
+  color: var(--status-error-text);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: var(--space-5);
+  border-left: 3px solid var(--status-error);
+  text-align: left;
+}
+
+.successBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  background: var(--status-active-bg);
+  color: var(--status-active-text);
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: var(--space-5);
+  border-left: 3px solid var(--status-active);
+  text-align: left;
+}
+
+/* OTP Inputs */
+.otpRow {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.otpInput {
+  width: 48px;
+  height: 56px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: var(--font);
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+  background: var(--input-bg);
+  border: 1.5px solid var(--input-border);
+  border-radius: var(--radius-lg);
+  outline: none;
+  caret-color: var(--accent);
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast), background var(--transition-fast), transform var(--transition-fast);
+}
+
+.otpInput::placeholder { color: transparent; }
+
+.otpInput:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--focus-ring);
+  background: var(--input-focus-bg);
+  transform: translateY(-2px);
+}
+
+.otpInput.filled {
+  border-color: var(--accent);
+  background: var(--accent-muted);
+}
+
+.otpInput.hasError {
+  border-color: var(--status-error);
+}
+
+.otpInput:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Resend */
+.resendRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  margin-top: var(--space-6);
+}
+
+.resendText {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.resendBtn {
+  font-family: var(--font);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--accent);
+  cursor: pointer;
+  transition: opacity var(--transition-fast);
+}
+
+.resendBtn:hover:not(:disabled) { opacity: 0.75; }
+
+.resendBtn:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+/* Back link */
+.backLink {
+  margin-top: var(--space-5);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.backLink a {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .otpInput {
+    width: 42px;
+    height: 50px;
+    font-size: 1.25rem;
+  }
+
+  .otpRow { gap: var(--space-2); }
+}

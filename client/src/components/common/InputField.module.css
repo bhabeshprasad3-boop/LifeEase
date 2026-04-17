@@ -1,45 +1,51 @@
 .group { display: flex; flex-direction: column; gap: var(--space-1); }
 
-/* Wrapper holds input + eye button */
+.label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+/* Wrapper */
 .inputWrapper {
   position: relative;
   display: flex;
   align-items: center;
-  border-radius: var(--radius-md);
 }
 
-.inputWrapper.hasError input {
-  box-shadow: 0 0 0 1.5px var(--error);
-}
-
-.label {
-  font-size: 0.8125rem;
-  font-weight: 600;
-  color: var(--on-surface);
+.inputWrapper.hasError .input {
+  box-shadow: 0 0 0 1.5px var(--status-error);
 }
 
 .input {
-  background: var(--surface-container);
-  border: none;
-  border-radius: var(--radius-md);
-  padding: var(--space-3) var(--space-4);
-  font-size: 0.875rem;
-  color: var(--on-surface);
-  transition: box-shadow var(--transition-fast), background var(--transition-fast);
   width: 100%;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  padding: 0 var(--space-4);
+  height: 38px;
+  font-size: 0.875rem;
+  color: var(--text-primary);
   outline: none;
+  transition: border-color var(--transition-fast), background var(--transition-fast), box-shadow var(--transition-fast);
 }
 
-/* Extra right padding so text never overlaps the eye button */
-.inputWithToggle { padding-right: 2.75rem; }
-
-.input::placeholder { color: var(--outline); }
+.input::placeholder { color: var(--placeholder); }
 
 .input:focus {
-  box-shadow: 0 0 0 1.5px var(--surface-tint);
+  border-color: var(--accent);
+  background: var(--input-focus-bg);
+  box-shadow: 0 0 0 3px var(--focus-ring);
 }
 
-/* Eye toggle button */
+.input:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.inputWithToggle { padding-right: 2.5rem; }
+
+/* Eye button */
 .eyeBtn {
   position: absolute;
   right: var(--space-3);
@@ -47,25 +53,16 @@
   align-items: center;
   justify-content: center;
   padding: var(--space-1);
-  color: var(--on-surface-variant);
+  color: var(--text-muted);
   background: none;
   border: none;
   cursor: pointer;
   border-radius: var(--radius-sm);
   transition: color var(--transition-fast);
-  flex-shrink: 0;
   line-height: 0;
 }
 
-.eyeBtn:hover { color: var(--on-surface); }
-.eyeBtn:focus-visible { outline: 2px solid var(--surface-tint); outline-offset: 2px; }
+.eyeBtn:hover { color: var(--text-primary); }
 
-.error {
-  font-size: 0.75rem;
-  color: var(--error);
-}
-
-.hint {
-  font-size: 0.75rem;
-  color: var(--on-surface-variant);
-}
+.error { font-size: 0.75rem; color: var(--status-error); margin-top: 2px; }
+.hint  { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }

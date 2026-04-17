@@ -4,19 +4,49 @@ const authService = require('../services/auth.service');
 
 /**
  * @route   POST /api/auth/register
- * @desc    Register a new user
+ * @desc    Register a new user and send verification OTP
  * @access  Public
  */
 const register = asyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
-  const { user, token } = await authService.register({ name, email, password });
+  const { email: registeredEmail } = await authService.register({ name, email, password });
 
-  ApiResponse.created({ user, token }, 'Account created successfully').send(res);
+  ApiResponse.created(
+    { email: registeredEmail, requiresVerification: true },
+    'Account created. A 6-digit verification code has been sent to your email.'
+  ).send(res);
+});
+
+/**
+ * @route   POST /api/auth/verify-email
+ * @desc    Verify email with OTP; returns JWT on success
+ * @access  Public
+ */
+const verifyEmail = asyncHandler(async (req, res) => {
+  const { email, code } = req.body;
+  const { user, token } = await authService.verifyEmail({ email, code });
+
+  ApiResponse.ok({ user, token }, 'Email verified successfully. Welcome to LifeEase!').send(res);
+});
+
+/**
+ * @route   POST /api/auth/resend-verification
+ * @desc    Resend verification OTP to the given email
+ * @access  Public
+ */
+const resendVerification = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  await authService.resendVerificationCode({ email });
+
+  ApiResponse.ok(
+    { email },
+    'A new verification code has been sent to your email.'
+  ).send(res);
 });
 
 /**
  * @route   POST /api/auth/login
- * @desc    Log in user and return JWT
+ * @desc    Log in a verified user and return JWT
  * @access  Public
  */
 const login = asyncHandler(async (req, res) => {
@@ -47,4 +77,4 @@ const getMe = asyncHandler(async (req, res) => {
   ApiResponse.ok({ user }, 'User retrieved successfully').send(res);
 });
 
-module.exports = { register, login, logout, getMe };
+module.exports = { register, verifyEmail, resendVerification, login, logout, getMe };

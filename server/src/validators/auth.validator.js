@@ -32,4 +32,32 @@ const loginRules = [
   body('password').notEmpty().withMessage('Password is required'),
 ];
 
-module.exports = { registerRules, loginRules };
+const verifyEmailRules = [
+  body('email')
+    .trim()
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Please provide a valid email')
+    .normalizeEmail(),
+  body('code')
+    .trim()
+    .notEmpty()
+    .withMessage('Verification code is required')
+    .isLength({ min: 6, max: 6 })
+    .withMessage('Verification code must be exactly 6 digits')
+    .isNumeric()
+    .withMessage('Verification code must contain only digits'),
+];
+
+const resendVerificationRules = [
+  body('email')
+    .trim()
+    .notEmpty()
+    .withMessage('Email is required')
+    .isEmail()
+    .withMessage('Please provide a valid email')
+    .normalizeEmail(),
+];
+
+module.exports = { registerRules, loginRules, verifyEmailRules, resendVerificationRules };
