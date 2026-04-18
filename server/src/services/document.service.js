@@ -244,7 +244,7 @@ const downloadDocument = async (userId, docId) => {
   }
 
   const filename = `${doc.title.replace(/[^a-zA-Z0-9_\-]/g, '_')}.${doc.fileType || 'bin'}`;
-  return { url: doc.fileUrl, filename };
+  return { url: doc.fileUrl, filename, publicId: doc.publicId };
 };
 
 /**

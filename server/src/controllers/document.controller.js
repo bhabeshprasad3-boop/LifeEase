@@ -95,12 +95,34 @@ const deleteDocument = asyncHandler(async (req, res) => {
  * @access  Private
  */
 const downloadDocument = asyncHandler(async (req, res) => {
-  const { url, filename } = await documentService.downloadDocument(
+  const { url, filename, publicId } = await documentService.downloadDocument(
     req.user._id,
     req.params.id
   );
-  // Redirect to Cloudinary URL so the file streams directly from there
-  res.redirect(302, url);
+
+  const cloudinary = require('../config/cloudinary');
+
+  try {
+    // Generate authenticated download URL using Cloudinary signed URL
+    const downloadUrl = cloudinary.url(publicId, {
+      resource_type: 'auto',
+      sign_url: true,
+      attachment: true,
+    });
+
+    const response = await fetch(downloadUrl);
+    if (!response.ok) throw new Error(`Cloud fetch failed: ${response.status}`);
+
+    const buffer = await response.arrayBuffer();
+
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.setHeader('Content-Type', response.headers.get('content-type') || 'application/octet-stream');
+    res.setHeader('Content-Length', buffer.byteLength);
+    res.send(Buffer.from(buffer));
+  } catch (err) {
+    console.error('Download error:', err.message);
+    throw new Error('Failed to download file');
+  }
 });
 
 module.exports = {

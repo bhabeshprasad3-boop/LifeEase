@@ -4,6 +4,7 @@ import { documentService } from '../services/document.service';
 import StatusBadge from '../components/common/StatusBadge';
 import Button from '../components/common/Button';
 import Icon from '../components/common/Icon';
+import DocumentPreview from '../components/document/DocumentPreview';
 import styles from './DocumentDetailPage.module.css';
 
 export default function DocumentDetailPage() {
@@ -115,19 +116,12 @@ export default function DocumentDetailPage() {
             <StatusBadge status={doc.status} />
           </div>
 
-          {/* Preview link */}
-          <div className={styles.previewBanner}>
-            <div className={styles.previewLeft}>
-              <Icon name={doc.fileType === 'pdf' ? 'fileText' : 'image'} size={18} />
-              <div>
-                <p className={styles.previewName}>{doc.title}</p>
-                <p className={styles.previewType}>{doc.fileType?.toUpperCase()} · Stored in Cloudinary</p>
-              </div>
-            </div>
-            <a href={doc.fileUrl} target="_blank" rel="noreferrer" className={styles.openLink}>
-              Open file <Icon name="externalLink" size={13} />
-            </a>
-          </div>
+          {/* Inline preview */}
+          <DocumentPreview
+            fileUrl={doc.fileUrl}
+            fileType={doc.fileType}
+            title={doc.title}
+          />
 
           {/* Notes */}
           {doc.notes && (

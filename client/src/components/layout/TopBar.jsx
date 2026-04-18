@@ -1,10 +1,13 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import Icon from '../common/Icon';
 import styles from './TopBar.module.css';
 
 export default function TopBar() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
   const greeting = () => {
@@ -38,6 +41,24 @@ export default function TopBar() {
         >
           <Icon name="plus" size={15} />
           <span>New Document</span>
+        </button>
+
+        <button
+          className={styles.themeToggle}
+          onClick={toggleTheme}
+          aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+          title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+        >
+          <Icon name={theme === 'light' ? 'moon' : 'sun'} size={15} />
+        </button>
+
+        <button
+          className={`${styles.logoutBtn} ${styles.mobileLogout}`}
+          onClick={logout}
+          aria-label="Logout"
+          title="Logout"
+        >
+          <Icon name="logout" size={15} />
         </button>
 
         <button
