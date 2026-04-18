@@ -5,7 +5,8 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://res.cloudinary.com/dpqu3fgef/image/upload/v1745074077/lifeease/documents/test.pdf\")",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" \"https://res.cloudinary.com/dmfhncmde/image/upload/v1/lifeease/documents/test.jpg\")",
       "Bash(node -e \"const fetch = globalThis.fetch; fetch\\('https://res.cloudinary.com/dmfhncmde/image/upload/v1/lifeease/documents/test.jpg'\\).then\\(r => console.log\\(r.status, r.statusText\\)\\).catch\\(e => console.error\\(e.message\\)\\)\")",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "mcp__ide__getDiagnostics"
     ]
   }
 }

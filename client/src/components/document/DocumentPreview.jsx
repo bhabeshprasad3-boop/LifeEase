@@ -1,8 +1,9 @@
 import { useState } from 'react';
+import { documentService } from '../../services/document.service';
 import Icon from '../common/Icon';
 import styles from './DocumentPreview.module.css';
 
-export default function DocumentPreview({ fileUrl, fileType, title }) {
+export default function DocumentPreview({ fileUrl, fileType, title, documentId }) {
   const [loaded, setLoaded] = useState(false);
   const [error, setError] = useState(false);
 
@@ -10,6 +11,10 @@ export default function DocumentPreview({ fileUrl, fileType, title }) {
 
   const isImage = ['png', 'jpg', 'jpeg', 'gif', 'webp', 'svg', 'bmp'].includes(fileType?.toLowerCase());
   const isPdf = fileType?.toLowerCase() === 'pdf';
+
+  const pdfPreviewUrl = documentId
+    ? `/api/documents/${documentId}/download`
+    : fileUrl;
 
   return (
     <div className={styles.preview}>
@@ -56,7 +61,7 @@ export default function DocumentPreview({ fileUrl, fileType, title }) {
 
         {isPdf && !error && (
           <iframe
-            src={`${fileUrl}#toolbar=0`}
+            src={pdfPreviewUrl}
             className={`${styles.media} ${loaded ? styles.visible : ''}`}
             title={title}
             onLoad={() => setLoaded(true)}

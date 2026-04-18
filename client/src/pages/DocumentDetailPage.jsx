@@ -118,6 +118,7 @@ export default function DocumentDetailPage() {
 
           {/* Inline preview */}
           <DocumentPreview
+            documentId={id}
             fileUrl={doc.fileUrl}
             fileType={doc.fileType}
             title={doc.title}
